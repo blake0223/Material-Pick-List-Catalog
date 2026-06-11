@@ -16,6 +16,7 @@ finished list out to per-user job files.
 | Path | What it is |
 |------|------------|
 | [`apps_script/`](apps_script/) | **The code.** A flat 1:1 mirror of the live Apps Script project (`.gs` + `.html` + `appsscript.json`). This is what `clasp` pushes to the sheet. See [`apps_script/README.md`](apps_script/README.md) for a file-by-file index. |
+| [`st_estimate_proxy/`](st_estimate_proxy/) | Standalone Apps Script web app that serves ServiceTitan estimate **Equipment + Materials** to the sheet, reading the trackers' `wms-<tenant>` secrets. Keeps ST credentials out of the sheet. See [`st_estimate_proxy/README.md`](st_estimate_proxy/README.md). |
 | [`spreadsheet/`](spreadsheet/) | CSV snapshots of all 14 sheets (displayed values), for reference while reading the code. See [`spreadsheet/README.md`](spreadsheet/README.md). |
 | [`docs/architecture.md`](docs/architecture.md) | **How the app works** — the subsystems, which files implement them, and which sheets they read/write. |
 | [`docs/data-model.md`](docs/data-model.md) | What each of the 14 sheets is for and how the code uses it. |
