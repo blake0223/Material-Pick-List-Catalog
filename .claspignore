@@ -1,0 +1,6 @@
+# Paths are relative to rootDir (apps_script/). Only the code files in
+# apps_script/ are pushed to Apps Script; everything else is repo-only.
+**/**
+!appsscript.json
+!*.gs
+!*.html

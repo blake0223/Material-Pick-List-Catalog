@@ -14,6 +14,7 @@ price estimates.
 | [`apps_script/`](apps_script/) | All 31 Apps Script files (`.gs` / `.html`) + `appsscript.json` manifest |
 | [`spreadsheet/`](spreadsheet/) | CSV snapshot of all 14 sheets (displayed values) |
 | `raw_export.json` | The original combined export bundle, kept intact for fidelity |
+| [`CLASP.md`](CLASP.md) | How to sync this repo with the live Apps Script project via `clasp` |
 
 ## What the tool does
 
