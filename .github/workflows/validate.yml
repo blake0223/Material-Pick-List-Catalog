@@ -1,13 +1,13 @@
 name: Validate Apps Script
 
-# Runs on every PR touching apps_script/. Catches broken code before it can be
-# merged + auto-deployed to the live sheet: the manifest must be valid JSON and
-# no source file may be empty. Make this a required check (Settings -> Branches)
-# so auto-merge waits for it to pass.
+# Runs on PRs touching either Apps Script project. Catches broken code before it
+# can merge + auto-deploy: every appsscript.json must be valid JSON and no source
+# file may be empty.
 on:
   pull_request:
     paths:
       - "apps_script/**"
+      - "st_estimate_proxy/**"
 
 jobs:
   validate:
@@ -16,14 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate manifest is valid JSON
+      - name: Validate manifests are valid JSON
         run: |
-          python3 -c "import json; json.load(open('apps_script/appsscript.json'))"
-          echo "appsscript.json is valid JSON"
+          for m in apps_script/appsscript.json st_estimate_proxy/appsscript.json; do
+            if [ -f "$m" ]; then
+              python3 -c "import json,sys; json.load(open('$m'))" && echo "OK: $m"
+            fi
+          done
 
       - name: Check no source file is empty
         run: |
-          empty=$(find apps_script -name '*.gs' -o -name '*.html' | while read -r f; do
+          empty=$(find apps_script st_estimate_proxy \( -name '*.gs' -o -name '*.html' \) 2>/dev/null | while read -r f; do
             [ -s "$f" ] || echo "$f"
           done)
           if [ -n "$empty" ]; then

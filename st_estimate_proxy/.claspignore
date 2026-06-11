@@ -1,0 +1,4 @@
+# Paths are relative to rootDir (this folder). Only push code + manifest.
+**/**
+!appsscript.json
+!*.gs

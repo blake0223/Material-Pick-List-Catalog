@@ -1,0 +1,58 @@
+name: Deploy ServiceTitan Estimate Proxy
+
+# Pushes st_estimate_proxy/ to its standalone Apps Script project on push to main.
+# No-ops until the project has been provisioned (scriptId filled into
+# st_estimate_proxy/.clasp.json) so CI stays green before then.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "st_estimate_proxy/**"
+  workflow_dispatch:
+
+concurrency:
+  group: clasp-deploy-proxy
+  cancel-in-progress: false
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check the proxy is provisioned
+        id: guard
+        run: |
+          if grep -q "REPLACE_WITH_PROXY_SCRIPT_ID" st_estimate_proxy/.clasp.json; then
+            echo "provisioned=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Proxy scriptId not set yet — skipping deploy. Fill st_estimate_proxy/.clasp.json after running 'clasp create'."
+          else
+            echo "provisioned=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node
+        if: steps.guard.outputs.provisioned == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install clasp
+        if: steps.guard.outputs.provisioned == 'true'
+        run: npm install -g @google/clasp@2.4.2
+
+      - name: Restore clasp credentials
+        if: steps.guard.outputs.provisioned == 'true'
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        run: |
+          if [ -z "$CLASPRC_JSON" ]; then
+            echo "::error::Missing CLASPRC_JSON secret."
+            exit 1
+          fi
+          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
+
+      - name: Push proxy to Apps Script
+        if: steps.guard.outputs.provisioned == 'true'
+        working-directory: st_estimate_proxy
+        run: clasp push --force
