@@ -1,0 +1,46 @@
+name: Deploy to live Apps Script
+
+# Pushes apps_script/ to the live Google Apps Script project (the one bound to
+# the "Material List - Hickory Master File" spreadsheet) whenever code lands on
+# main. Can also be run manually from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps_script/**"
+      - ".clasp.json"
+      - ".github/workflows/deploy-clasp.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: clasp-deploy
+  cancel-in-progress: false
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install clasp
+        run: npm install -g @google/clasp@2.4.2
+
+      - name: Restore clasp credentials
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        run: |
+          if [ -z "$CLASPRC_JSON" ]; then
+            echo "::error::Missing CLASPRC_JSON secret. Run 'clasp login' locally and"
+            echo "::error::paste the contents of ~/.clasprc.json into the repo secret CLASPRC_JSON."
+            exit 1
+          fi
+          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
+
+      - name: Push to live Apps Script project
+        run: clasp push --force

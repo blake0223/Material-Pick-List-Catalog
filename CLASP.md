@@ -63,6 +63,36 @@ Pick one convention and stick with it:
 If you plan to round-trip through `clasp pull` regularly, the `.js` convention
 is the smoother path. Let me know and I can convert the repo to `.js` in one go.
 
+## Auto-deploy to the live sheet (GitHub Actions)
+
+There's a workflow at `.github/workflows/deploy-clasp.yml` that pushes
+`apps_script/` to the **live** Apps Script project automatically whenever changes
+land on `main` (and can be triggered manually from the Actions tab). Once it's
+set up, edits flow to the live spreadsheet on every merge — no manual `clasp push`.
+
+**One-time setup (must be done by a human — it needs your Google login):**
+
+```bash
+# 1. Authenticate locally. Opens a browser; writes ~/.clasprc.json
+npm install -g @google/clasp@2.4.2
+clasp login
+
+# 2. Print the credential file so you can copy it
+cat ~/.clasprc.json
+```
+
+3. In GitHub: **Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `CLASPRC_JSON`
+   - Value: paste the **entire contents** of `~/.clasprc.json`
+
+That's it. After the secret exists, merging to `main` deploys to the live script.
+You can confirm it works by running the workflow manually (Actions tab →
+"Deploy to live Apps Script" → Run workflow).
+
+> The account you `clasp login` with must have edit access to the script. The
+> token in `CLASPRC_JSON` is sensitive — it lives only in GitHub's encrypted
+> secrets, never in the repo.
+
 ## Security note
 
 `.clasprc.json` (created by `clasp login`) holds your OAuth refresh token — it's
