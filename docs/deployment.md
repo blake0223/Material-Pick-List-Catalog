@@ -93,6 +93,26 @@ You can confirm it works by running the workflow manually (Actions tab →
 > token in `CLASPRC_JSON` is sensitive — it lives only in GitHub's encrypted
 > secrets, never in the repo.
 
+## PR validation gate (`validate.yml`)
+
+`.github/workflows/validate.yml` runs on every PR that touches `apps_script/`. It
+confirms `appsscript.json` is valid JSON and that no `.gs`/`.html` file is empty,
+so broken code can't be merged and auto-deployed to the live sheet.
+
+To make it a hard gate that auto-merge waits on:
+- **Settings → General → Pull Requests → ✅ Allow auto-merge**
+- **Settings → Branches → add a rule for `main` → require the `validate` check**
+
+## The full pipeline
+
+```
+branch  →  PR (validate runs)  →  merge to main  →  deploy-clasp.yml (clasp push)  →  live sheet
+```
+
+Because `deploy-clasp.yml` uses `clasp push --force`, **the repo is the source of
+truth** — don't hand-edit code in the Apps Script editor or the next deploy
+overwrites it.
+
 ## Security note
 
 `.clasprc.json` (created by `clasp login`) holds your OAuth refresh token — it's

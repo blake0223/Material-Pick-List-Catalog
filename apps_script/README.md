@@ -1,54 +1,88 @@
-# Apps Script — `Material List - Hickory Master File`
+# `apps_script/` — live Apps Script mirror
 
-Source exported 2026-06-11T00:48:11.078Z from the Apps Script project bound to the
-[Material List - Hickory Master File](https://docs.google.com/spreadsheets/d/1c1Wlxb74wLK-OcIYRJzjzXKBlHStzl-cRV-GKGbq2pY/edit) spreadsheet.
+A **flat, 1:1 mirror** of the Apps Script project bound to the
+[Material List - Hickory Master File](https://docs.google.com/spreadsheets/d/1c1Wlxb74wLK-OcIYRJzjzXKBlHStzl-cRV-GKGbq2pY/edit)
+spreadsheet. `clasp` pushes this folder to the live script (`.clasp.json` sets
+`rootDir: apps_script`).
 
-Files are stored raw (`.gs` for server JS, `.html` for templated UI, plus the
-`appsscript.json` manifest) so they can be pushed back with [clasp](https://github.com/google/clasp)
-if desired.
+> ⚠️ **Keep this folder flat. Do not create subfolders or rename files.**
+> HTML files are loaded by bare name (e.g. `createHtmlOutputFromFile('sidebarBellMetro')`)
+> and `appsscript.json` must sit at the root — `clasp` would rename files on
+> deploy and break the app.
 
-## Server scripts (`.gs`)
+For how these files fit together, see [`../docs/architecture.md`](../docs/architecture.md).
 
-| File | Chars |
-|------|------:|
-| `Add by Search.gs` | 2,097 |
-| `Additional Materials (PackTimco).gs` | 3,145 |
-| `Additional Materials.gs` | 3,137 |
-| `Changeout Kits Update.gs` | 2,943 |
-| `Checkbox Update.gs` | 2,674 |
-| `Checklist Creation.gs` | 2,070 |
-| `Clear Changeout Kit Selection.gs` | 626 |
-| `Clear Input.gs` | 1,509 |
-| `Clear Search.gs` | 305 |
-| `Confirm Selected Kits.gs` | 2,281 |
-| `Custom Kit Creation.gs` | 9,956 |
-| `Data Only Update.gs` | 1,443 |
-| `Email Patch Notes.gs` | 2,272 |
-| `Hardernotsmarder.gs` | 1,306 |
-| `Help Button.gs` | 1,133 |
-| `JSON EXPORT.gs` | 3,319 |
-| `onEdit.gs` | 6,166 |
-| `onOpen.gs` | 316 |
-| `Price Estimator (AI Add).gs` | 2,333 |
-| `Price Estimator.gs` | 9,568 |
-| `Print Button (PackTimco).gs` | 2,965 |
-| `Print Button.gs` | 2,961 |
-| `Save Draft.gs` | 6,305 |
-| `Submit New Material Lists.gs` | 21,395 |
-| `Update Precheck.gs` | 1,961 |
-| `Update Wizard Magic.gs` | 9,559 |
+## Files by subsystem
 
-## UI templates (`.html`)
+### Triggers
+| File | Key functions |
+|------|---------------|
+| `onOpen.gs` | builds the **Tools** menu |
+| `onEdit.gs` | reactive formatting on *Material Input*; auto-fills kits on *Change Out Kits* |
 
-| File | Chars |
-|------|------:|
-| `faq_modal.html` | 1,991 |
-| `PrintChecklist.html` | 884 |
-| `SheetSelector.html` | 1,174 |
-| `sidebarBellMetro.html` | 6,950 |
+### Material list building & submission
+| File | Key functions |
+|------|---------------|
+| `Submit New Material Lists.gs` | `showSidebarBellMetro`, `getSidebarDataBellMetro`, `insertModels_`, `finalizeMaterialListBellMetro`, `uploadFileBellMetro`, `findFinancialSummaryEmail` |
+| `Checklist Creation.gs` | `generateChecklist` |
+| `Data Only Update.gs` | `copyDataOnly` |
+| `Save Draft.gs` | `DraftList` |
+| `sidebarBellMetro.html` | the submission sidebar UI |
 
-## Manifest
+### Change-out kits
+| File | Key functions |
+|------|---------------|
+| `Changeout Kits Update.gs` | `applyKitListUpdate` |
+| `Confirm Selected Kits.gs` | `runMaterialUpdate` |
+| `Clear Changeout Kit Selection.gs` | `clearChangeOutKits` |
 
-| File | Chars |
-|------|------:|
-| `appsscript.json` | 730 |
+### Custom kits
+| File | Key functions |
+|------|---------------|
+| `Custom Kit Creation.gs` | `manageKits`, `saveMaterialsToCustomList`, `loadMaterialsFromCustomList`, `editMaterialsFromCustomList` |
+
+### Adding materials
+| File | Key functions |
+|------|---------------|
+| `Add by Search.gs` | `submitItem` |
+| `Additional Materials.gs` | `generateAdditionalMaterials` |
+| `Additional Materials (PackTimco).gs` | `generateAdditionalMaterials` (PackTimco variant) |
+| `Clear Search.gs` / `Clear Input.gs` | `clearSearch`, `resetMaterialInput`, `clearCells` |
+
+### Pricing
+| File | Key functions |
+|------|---------------|
+| `Price Estimator.gs` | `runInventoryCheck` (password-gated), `runInventoryOnly`, `runPriceBreakdown`, `estimatePrice`, `levenshtein` |
+| `Price Estimator (AI Add).gs` | AI-assisted add |
+
+### Printing & email
+| File | Key functions |
+|------|---------------|
+| `Print Button.gs` / `Print Button (PackTimco).gs` | `printGeneratedMaterialList`, `handlePrintMaterialSelection` |
+| `PrintChecklist.html` | print template |
+| `Email Patch Notes.gs` | `sendEmailsToSalesmen` |
+
+### Update Wizard (fan-out to per-user files)
+| File | Key functions |
+|------|---------------|
+| `Update Wizard Magic.gs` | `updateScriptFromMaster`, `applyFinalFormatting`, `matchColumnWidths`, `applyAlternatingColors`, `applySpecificMerges` |
+| `Checkbox Update.gs` | `copyCheckboxesToTargetFiles` |
+| `Hardernotsmarder.gs` | `copySelectedTabsToTargetURLs`, `copySheetsToTargets` |
+| `Update Precheck.gs` | `checkMaterialInput` |
+| `SheetSelector.html` | tab-picker UI |
+
+### Help
+| File | Key functions |
+|------|---------------|
+| `Help Button.gs` | `showFAQModal`, `getAnswer` |
+| `faq_modal.html` | FAQ modal UI |
+
+### Tooling / maintenance
+| File | Key functions |
+|------|---------------|
+| `JSON EXPORT.gs` | `exportEverythingToJson` — the exporter that produced this repo |
+
+### Manifest
+| File | |
+|------|--|
+| `appsscript.json` | scopes, runtime (V8), timezone, web-app config |

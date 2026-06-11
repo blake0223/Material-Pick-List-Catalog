@@ -8,6 +8,9 @@ Each sheet is captured as a CSV of its **displayed** values (formula results,
 not formulas). Sheets marked *truncated* were larger than the 500-row export cap;
 re-run the export with `MAX_ROWS_PER_SHEET = -1` to capture them in full.
 
+For what each sheet is *for* and how the code uses it, see
+[`../docs/data-model.md`](../docs/data-model.md).
+
 | Sheet (CSV) | Total rows | Cols | Rows captured | Truncated |
 |-------------|-----------:|-----:|--------------:|:---------:|
 | [`INSTRUCTIONS.csv`](INSTRUCTIONS.csv) | 104 | 2 | 104 | no |
