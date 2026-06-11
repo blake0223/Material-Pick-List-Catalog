@@ -1,0 +1,40 @@
+name: Process spreadsheet export
+
+# When the Apps Script "Sync to GitHub" pushes a fresh reference/raw_export.json,
+# regenerate the per-sheet CSVs + spreadsheet/README.md and commit them back.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reference/raw_export.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate CSVs from the export
+        run: python3 scripts/split_export.py
+
+      - name: Commit regenerated data (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add spreadsheet/
+          if git diff --cached --quiet; then
+            echo "No spreadsheet changes to commit."
+          else
+            git commit -m "Regenerate sheet CSVs from latest export"
+            git push
+          fi
