@@ -36,6 +36,77 @@ function exportEverythingToJson() {
   return file.getUrl();
 }
 
+/**
+ * Builds the same export bundle and commits it straight to the GitHub repo at
+ * reference/raw_export.json. A GitHub Action then splits it into the per-sheet
+ * CSVs automatically — no manual download/upload.
+ *
+ * SETUP (one-time): in the Apps Script editor, open Project Settings (gear) ->
+ * Script Properties, and add:
+ *   GITHUB_TOKEN  = a fine-grained PAT scoped to this repo, Contents: Read+Write
+ *   GITHUB_REPO   = blake0223/Material-Pick-List-Catalog   (optional; this is the default)
+ *   GITHUB_BRANCH = main                                   (optional; default main)
+ */
+function exportToGitHub() {
+  var props  = PropertiesService.getScriptProperties();
+  var token  = props.getProperty('GITHUB_TOKEN');
+  var repo   = props.getProperty('GITHUB_REPO')   || 'blake0223/Material-Pick-List-Catalog';
+  var branch = props.getProperty('GITHUB_BRANCH') || 'main';
+  var path   = 'reference/raw_export.json';
+
+  if (!token) {
+    throw new Error('Missing GITHUB_TOKEN. Add it in Project Settings -> Script Properties ' +
+      '(a fine-grained PAT for this repo with Contents: Read and write).');
+  }
+
+  var bundle = {
+    exportedAt: new Date().toISOString(),
+    code: exportProjectContent_(),
+    spreadsheet: exportSpreadsheetSnapshot_()
+  };
+  var json = JSON.stringify(bundle, null, 2);
+  var contentB64 = Utilities.base64Encode(json, Utilities.Charset.UTF_8);
+
+  var apiBase = 'https://api.github.com/repos/' + repo + '/contents/' + path;
+  var headers = {
+    Authorization: 'Bearer ' + token,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+
+  // Look up the existing file's SHA (required to update, omitted to create).
+  var sha = null;
+  var getResp = UrlFetchApp.fetch(apiBase + '?ref=' + encodeURIComponent(branch), {
+    method: 'get', headers: headers, muteHttpExceptions: true
+  });
+  if (getResp.getResponseCode() === 200) {
+    sha = JSON.parse(getResp.getContentText()).sha;
+  }
+
+  var payload = {
+    message: 'Auto-export: spreadsheet + code snapshot',
+    content: contentB64,
+    branch: branch
+  };
+  if (sha) { payload.sha = sha; }
+
+  var putResp = UrlFetchApp.fetch(apiBase, {
+    method: 'put',
+    contentType: 'application/json',
+    headers: headers,
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+
+  if (putResp.getResponseCode() >= 300) {
+    throw new Error('GitHub commit failed (' + putResp.getResponseCode() + '): ' +
+      putResp.getContentText());
+  }
+
+  SpreadsheetApp.getActiveSpreadsheet().toast('Synced export to GitHub (' + repo + ').');
+  Logger.log('Committed ' + path + ' to ' + repo + '@' + branch);
+}
+
 /** Pulls all .gs/.html/manifest files via the Apps Script API. */
 function exportProjectContent_() {
   var scriptId = ScriptApp.getScriptId();

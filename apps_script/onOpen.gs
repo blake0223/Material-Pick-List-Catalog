@@ -5,5 +5,7 @@ function onOpen() {
     .addItem('Recheck Inventory', 'runInventoryOnly')
     .addItem('Price Breakdown', 'runPriceBreakdown')
     .addItem('Equipment Validation','findFinancialSummaryEmail')
+    .addSeparator()
+    .addItem('Sync to GitHub', 'exportToGitHub')
     .addToUi();
 }

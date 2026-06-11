@@ -20,6 +20,7 @@ finished list out to per-user job files.
 | [`docs/architecture.md`](docs/architecture.md) | **How the app works** — the subsystems, which files implement them, and which sheets they read/write. |
 | [`docs/data-model.md`](docs/data-model.md) | What each of the 14 sheets is for and how the code uses it. |
 | [`docs/deployment.md`](docs/deployment.md) | The clasp + GitHub Actions pipeline, and how to set it up / change it. |
+| [`docs/auto-export.md`](docs/auto-export.md) | How the sheet pushes fresh snapshots into the repo (Tools → Sync to GitHub). |
 | [`reference/raw_export.json`](reference/) | The original combined export bundle (code + sheet snapshot), kept verbatim as a backup. |
 | `.github/workflows/` | `validate.yml` (PR check) and `deploy-clasp.yml` (auto-deploy to the live sheet). |
 
