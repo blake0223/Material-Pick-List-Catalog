@@ -1,0 +1,13 @@
+Question,Answer
+What information is required to create a material list?,"You need to provide the job name, project number or job ID, job address, and the current date. Optionally, you can include the estimated start time."
+What should I do if I cannot find a material in the list?,"First, check the 'Specific Materials' section under 'Materials' where you can manually enter the item. Ensure it’s not already available in the general materials list."
+How can I add additional materials to an existing list?,"Open the specific material list for the job, enter the additional materials, and select the checkbox next to the item under the 'New?' column. Then, click the 'Add Additional Material' button."
+What should I do if the buttons stop working or scripts show errors?,"Delete your copy of the material list and create a new one from the master file named 'Material List - Your Company Master File.' If issues persist, contact support."
+Why am I seeing a Google authorization warning?,This is normal. The script requires access to create and share files on your behalf. Follow the on-screen steps to grant access. It is safe to proceed.
+Can I create a material list on a mobile device?,"Yes, but you must use the browser version of Google Sheets instead of the app. Delete the app if necessary and access Sheets through your browser."
+What happens after I click the 'DONE' button?,"A new file will be created, shared with the warehouse/purchasing, and stored in the shared Google Drive folder named 'Material Lists - Your Company Name.'"
+Why is there an extra confirmation pop-up when there is no equipment?,"If no equipment is listed, you will need to confirm that it was intentional. This is to prevent accidental submission of incomplete lists."
+How can I print a material list?,Click the print button and select whether you want to print the original or additional material list. A PDF will be generated for printing.
+What should I do if I see a 'Back to Safety' warning when authorizing?,Click on the 'Advanced' link and proceed to authorize. This is safe and necessary for the script to work.
+What is the purpose of the 'Clear' button?,"The 'Clear' button will reset the input fields to the template state, allowing you to start over without manually deleting entries."
+Who should I contact if the material list is not generating properly?,Contact Blake at (315) 854-4492 for assistance with troubleshooting script errors or other technical issues.

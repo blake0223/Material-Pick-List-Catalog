@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+</head>
+<body>
+  <form id="sheetForm">
+    <div id="checkboxes"></div>
+    <button type="button" onclick="submitSelection()">Copy Sheets</button>
+  </form>
+
+  <script>
+    google.script.run.withSuccessHandler(createCheckboxes).getSheetNames();
+
+    function createCheckboxes(sheetNames) {
+      const container = document.getElementById('checkboxes');
+      sheetNames.forEach(name => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = name;
+        checkbox.value = name;
+
+        const label = document.createElement('label');
+        label.htmlFor = name;
+        label.textContent = name;
+
+        container.appendChild(checkbox);
+        container.appendChild(label);
+        container.appendChild(document.createElement('br'));
+      });
+    }
+
+    function submitSelection() {
+      const selected = Array.from(document.querySelectorAll('input[type=\"checkbox\"]:checked'))
+                            .map(cb => cb.value);
+      google.script.run.copySheetsToTargets(selected);
+      google.script.host.close();
+    }
+  </script>
+</body>
+</html>

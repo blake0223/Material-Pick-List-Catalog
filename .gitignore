@@ -1,0 +1,11 @@
+# clasp / Apps Script auth — NEVER commit these (they hold OAuth tokens)
+.clasprc.json
+~/.clasprc.json
+
+# Node tooling for clasp
+node_modules/
+package-lock.json
+
+# OS / editor cruft
+.DS_Store
+*.swp
