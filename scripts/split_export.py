@@ -23,7 +23,9 @@ SHEET_DIR = os.path.join(REPO_ROOT, "spreadsheet")
 
 
 def safe_name(name: str) -> str:
-    return re.sub(r"[^A-Za-z0-9 _()?-]", "_", name).strip()
+    # Strip characters that are illegal in Windows filenames (< > : " / \ | ? *)
+    # plus anything else outside this safe set, so the repo checks out on Windows.
+    return re.sub(r"[^A-Za-z0-9 _()-]", "_", name).strip()
 
 
 def main() -> int:
