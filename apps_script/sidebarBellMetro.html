@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      #dropZone { border: 2px dashed #ccc; padding: 20px; text-align: center; font-family: Times New Roman, sans-serif; color: #555; margin: 20px; min-height: 30px; }
+      #dropZone.dragover { border-color: #000; }
+      #status { margin-top: 10px; font-size: 14px; color: #333; }
+      #instructions { margin-bottom: 20px; font-size: 14px; color: #333; }
+      #finalizeButton { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="instructions">
+      <p>Please drag and drop PDFs or images of drawings into the box below.</p>
+      <p>Files will be saved in the same folder as the material list.</p>
+    </div>
+    <!-- Inline ondragover/ondrop to ensure events fire -->
+    <div id="dropZone">Drag & Drop Files Here</div>
+    <p id="status">Status: Waiting for drop...</p>
+    <button id="finalizeButton" onclick="finalizeMaterialListBellMetro()">Finalize Material List</button>
+    <!-- Hidden inputs for debugging -->
+    <input type="hidden" id="folderId" value="">
+    <input type="hidden" id="jobName" value="">
+    
+    <script>
+      console.log("Sidebar script loaded.");
+
+      // Global variables to hold data from server
+      let globalFolderId = "";
+      let globalJobName = "";
+
+      // Function to initialize data from server-side and store in localStorage
+      function initializeSidebarData(callback) {
+        google.script.run.withSuccessHandler(function(data) {
+          globalFolderId = data.folderId;
+          globalJobName = data.jobName;
+          // Save to localStorage as fallback
+          localStorage.setItem("folderId", globalFolderId);
+          localStorage.setItem("jobName", globalJobName);
+          document.getElementById("folderId").value = globalFolderId;
+          document.getElementById("jobName").value = globalJobName;
+          console.log("Initialized sidebar data:", data);
+          if (callback) callback();
+        }).getSidebarDataBellMetro();
+      }
+
+      // Immediately initialize sidebar data
+      initializeSidebarData();
+
+      // On drop, if global variables are empty, try to read from localStorage
+      function getStoredData() {
+        if (!globalFolderId) {
+          globalFolderId = localStorage.getItem("folderId") || "";
+        }
+        if (!globalJobName) {
+          globalJobName = localStorage.getItem("jobName") || "";
+        }
+      }
+
+      let uploadCount = 0;
+      let totalFiles = 0;
+
+      function handleFileUpload(files, folderId, jobName) {
+        const status = document.getElementById("status");
+        status.textContent = "Uploading...";
+        uploadCount = 0;
+        totalFiles = files.length;
+        console.log("Starting upload for", totalFiles, "files.");
+        
+        Array.from(files).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const fileData = e.target.result; // Base64-encoded file data
+            console.log("File read complete for", file.name);
+            google.script.run
+              .withFailureHandler(function(error) {
+                console.error("Upload failed:", error);
+                status.textContent = "Upload failed!";
+              })
+              .withSuccessHandler(function() {
+                console.log("Upload succeeded for", file.name);
+                uploadCount++;
+                if (uploadCount === totalFiles) {
+                  status.textContent = "Upload complete! Click 'Finalize Material List'.";
+                  document.getElementById("finalizeButton").style.display = "block";
+                }
+              })
+              .uploadFileBellMetro(fileData, file.name, folderId, jobName);
+          };
+          reader.onerror = function() {
+            status.textContent = "File read error!";
+            console.error("Error reading file:", file.name);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function finalizeMaterialListBellMetro() {
+        document.getElementById("status").textContent = "Finalizing...";
+        google.script.run
+          .withFailureHandler(function(error) {
+            console.error("Error finalizing material list:", error);
+            document.getElementById("status").textContent = "Error finalizing!";
+          })
+          .withSuccessHandler(function() {
+            document.getElementById("status").textContent = "Material list finalized!";
+            google.script.host.close();
+          })
+          .resumeProcessBellMetro();
+      }
+
+      // Inline drop handler function
+      function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById("dropZone").classList.remove("dragover");
+        // Clear dropped data to prevent caching issues
+        if (e.dataTransfer.clearData) e.dataTransfer.clearData();
+        console.log("Inline drop handler triggered.");
+        
+        // Reset UI elements in case of subsequent drops
+        document.getElementById("status").textContent = "Uploading...";
+        document.getElementById("finalizeButton").style.display = "none";
+        
+        const files = e.dataTransfer.files;
+        console.log("Files dropped:", files);
+        
+        // Try to get stored data if globals are empty
+        getStoredData();
+        console.log("Read from storage - Folder ID:", globalFolderId, "Job Name:", globalJobName);
+        
+        if (files.length > 0 && globalFolderId && globalJobName) {
+          handleFileUpload(files, globalFolderId, globalJobName);
+        } else {
+          console.log("Global data missing. Reinitializing with delay...");
+          // Add a short delay before reinitializing
+          setTimeout(function() {
+            initializeSidebarData(function() {
+              getStoredData();
+              console.log("After reinit - Folder ID:", globalFolderId, "Job Name:", globalJobName);
+              if (files.length > 0 && globalFolderId && globalJobName) {
+                handleFileUpload(files, globalFolderId, globalJobName);
+              } else {
+                document.getElementById("status").textContent = "Missing folder ID or job name!";
+                console.error("Missing folder ID or job name after reinit.");
+              }
+            });
+          }, 500);
+        }
+      }
+
+      // Attach drop event listeners via JavaScript as backup
+      const dropZone = document.getElementById("dropZone");
+      dropZone.addEventListener("dragover", function(e) {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+        console.log("dragover event");
+      });
+      dropZone.addEventListener("dragleave", function() {
+        dropZone.classList.remove("dragover");
+        console.log("dragleave event");
+      });
+      dropZone.addEventListener("drop", handleDrop);
+    </script>
+  </body>
+</html>

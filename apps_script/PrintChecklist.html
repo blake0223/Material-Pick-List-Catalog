@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+      .checkbox { width: 16px; height: 16px; }
+    </style>
+  </head>
+  <body>
+    <table>
+      <? for (var i = 0; i < values.length; i++) { ?>
+        <tr>
+          <? for (var j = 0; j < values[i].length; j++) { 
+               var cell = values[i][j]; ?>
+            <? if (j === 3) { /* print an empty checkbox */ ?>
+              <td><input type="checkbox" class="checkbox" disabled></td>
+            <? } else { ?>
+              <td><?= cell ?></td>
+            <? } ?>
+          <? } ?>
+        </tr>
+      <? } ?>
+    </table>
+    <script>
+      window.onload = function() {
+        window.print();
+        google.script.host.close();
+      };
+    </script>
+  </body>
+</html>

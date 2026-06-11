@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h3 {
+      font-size: 28px;
+      color: #333;
+    }
+    select {
+      width: 95%;
+      padding: 12px;
+      font-size: 18px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      white-space: normal;
+      height: 250px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #answer {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #555;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h3>Select a Question to View the Answer</h3>
+  
+  <!-- Larger Dropdown with Visible Questions -->
+  <select id="questionDropdown" size="10">
+    <? for (let i = 0; i < questions.length; i++) { ?>
+      <option value="<?= questions[i] ?>"><?= questions[i] ?></option>
+    <? } ?>
+  </select>
+  <br>
+  
+  <button onclick="showAnswer()">Show Answer</button>
+  
+  <!-- Answer Display Section -->
+  <div id="answer" style="display:none;"></div>
+  
+  <script>
+    function showAnswer() {
+      const question = document.getElementById('questionDropdown').value;
+      
+      google.script.run
+        .withSuccessHandler(function(answer) {
+          const answerDiv = document.getElementById('answer');
+          answerDiv.innerHTML = "<strong>Answer:</strong><br>" + answer;
+          answerDiv.style.display = "block";
+        })
+        .getAnswer(question);
+    }
+  </script>
+</body>
+</html>

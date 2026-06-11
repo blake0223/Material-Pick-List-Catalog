@@ -1,0 +1,104 @@
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,JOB INFORMATION
+,"You are required include the full name of the job, the ID or project number (please do not put the link it will not retain its functionality), the job's address, and the current date when creating the new list"
+,These fields are required and you will not be allowed to create a list without populating these fields
+,
+,"Also Include an estimated start time for the job if known, this is not required but is always appreciated."
+,
+,"Be sure to select the delivery location for the material,"
+,
+,
+,MATERIAL LIST GENERATOR INSTRUCTIONS
+,There are four sections in the material input tab that you must be aware of while making a new material list
+,
+,EQUIPMENT
+,Make sure to enter model numbers and quantities for each unique peice of equipment. Feel free to include more information such as brandname if applicable. More information never hurts.
+,
+,PLENUMS / SPECIALIZED DUCTWORK
+,This section is intended for non standard ductwork that will require fabrication
+,"Next to each type of fabricated ductwork, enter it's dimensions, and any other relavant information where applicable"
+,
+,MATERIALS
+,"In order to generate a material list, it is a reqiurement that you have at least one item with a quantity next to it "
+,"(or one quantity in the ""fittings"" section)"
+,"You can sort this list by clicking the ""All"" at the top left of this section next to ""Catergory"""
+,"If you are unable to find the material you are looking for, there is a subsection of this category called ""Specific Materials"" with empty spaces that you can type out what you need in"
+,Please try to find what you are looking for in the general list of materials first
+,
+,"In the unlikely event that there is no additional material besides equipment, just put ""No Additional Material"" or a similiar note in the ""Specific Materials"" section with a quantity of zero"
+,This is required for lists with no material because the generator will block you from creating a list without any quantities to prevent accidental invalid lists
+,
+,"Note: No fittings will be found under the ""Materials"" section but rather the ""Fittings"" section"
+,
+,FITTINGS
+,"Just like the ""Materials"" section, this section can be sorted using the ""All"" at the top left of this section next to ""Catergory""  "
+,
+,"Make sure that you clear all filters in the ""Materials"" section before trying to find anything here, the same is true in the reverse"
+,
+,WHEN YOU ARE FINISHED
+,"When you have finished putting all necessary equipment and materials on this list, click on the ""Generated Material List"" tab and ensure it is correct."
+,"If for some reason materials/equipment with quantities in the input tab are not showing up, please give Blake a call at (315) 854-4492 to troubleshoot."
+,
+,"Once you're sure that the list is correct, click the big red button that says ""DONE"" on it"
+,
+,"The first time you do this on your copy of the Material List Generator you will see a pop up asking you to ""Authorize"", this is normal and it is perfectly okay to grant access"
+,
+,"If you get a pop up that says something about going ""Back to Safety"", click the ""Advanced"" link to the left of the ""Back to Safety"" button. There you will find the final step to permit a script to access your account."
+,
+,"After doing this for the first time, you should not have to do it again unless you are on a new/different copy"
+,
+,"This is perfectly safe, the only reason google throws up these warnings is because the scripts involved in this process created and share a new file in your name, so it requires special access"
+,
+,"If you have not populated all fields, the list will throw an error stating what required job information is still needed or if theres no materials with quantities. You must rectify these things to resolve the error"
+,
+,"Assuming all required fields are populated, you will see a pop up box asking if you're sure if you want to proceed, this is because once you hit yes, your template will be cleared and a new file will be created and shared"
+,"If there is no equipment, you will have to hit yes on an additional pop up box that asks if this was intentional"
+,
+,"After you confirm, a new list will be created, shared with the warehouse/purchasing, and added to a shared google drive folder named ""Material Lists - Your Company Name"""
+,
+,ADDING TO AN EXISTING LIST
+,"If you need to add more to an existing list, you must first open the specific material list for that job"
+,
+,"You should not create a new list under any circumstance, this additional material function is intended to track materials that were not originally accounted for in the intial list"
+,"You are not to create a list without being certain of the items needed for the job, so it is imperative that you use this additional material function so the warehouse is notified immediately of any changes"
+,
+,"Enter additional material following the existing framework seen above, but this time, you must click the checkbox next to the item under the ""New?"" collumn"
+,
+,"When you are done entering additional materials, click the ""Add Additional Material"" button. This will unhide the ""Additional Material"" tab, and will notify the warehouse of the change"
+,"You will be asked to authorize again because it is a new file, this is uavoidable and is completely safe to authorize as well"
+,This can be repeated
+,
+,USING GENERATOR ON A MOBILE DEVICE
+,"If you are trying to create a material list on an iPad or another mobile device, you must ensure you are using the browser version of google sheets"
+,
+,"This means you must delete the google sheets app from your device, and instead search google sheets on your internet browser and use the file there"
+,"This is because google apps script are prohibited from use on the app version of sheets, so you will not be able to click any of the buttons otherwise"
+,
+,PRINT AND CLEAR BUTTONS
+,"These buttons are self explanatory, the cancel sign is the ""Clear"" button, meaning it will wipe your inputs and return the file to its template state"
+,
+,"The print button will lead to a pop up box where you can select whether you want to print the original or additional material list. After confirming, a pdf will be downloaded of that list that can then be printed"
+,
+,"After selecting which list you want to create, wait a second, do not spam click the button or else you'll end up with duplicate pdfs"
+,
+,KNOWN PROBLEMS
+,"Problem: Occationally, for some reason scripts will ""not be found"" when clicking the buttons in this list."
+,"Solution: Delete your personal copy then  go to your respective master file (Named ""Material List - Your Company Master File"" and make a new copy. Naming it ""Material List - Your Name""."
+,
+,Problem: Buttons seem to shift out of place
+,"Solution: Just click into a different tab and back to the input tab, this should reset button positions"
