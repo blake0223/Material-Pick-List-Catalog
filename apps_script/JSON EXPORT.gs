@@ -8,9 +8,8 @@
  *  2. Run exportEverythingToJson() and authorize when prompted.
  */
 
-// Max data rows to capture per sheet. Bump this up if a sheet is the actual
-// catalog/pick-list data you want me to see in full. Set to -1 for ALL rows.
-var MAX_ROWS_PER_SHEET = 500;
+// Max data rows to capture per sheet. -1 captures ALL rows (no cap).
+var MAX_ROWS_PER_SHEET = -1;
 
 function exportEverythingToJson() {
   var bundle = {
